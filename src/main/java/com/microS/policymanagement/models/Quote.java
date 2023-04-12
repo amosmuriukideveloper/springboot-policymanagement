@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -23,15 +26,14 @@ public class Quote {
     @JoinColumn(name = "policy_id")
     private Policy policy;
 
+    private int manufactureYear;
+
     private CoverageType coverageType;
 
-    private CoverageOptions coverageOptions;
+    private PolicyType policyType;
 
-//    private CoverageTypePremium coverageTypePremium;
+    private Set<CoverageOptions> coverageOptions;
 
-    private double premium;
+    private BigDecimal totalPremium;
 
-    private double levies;
-
-    private double totalPremium;
 }

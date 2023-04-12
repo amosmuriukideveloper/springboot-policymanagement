@@ -33,17 +33,17 @@ public class Vehicle {
     @Column(name = "year_of_manufacture")
     private int manufactureYear;
 
-    @OneToMany (mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Use JsonManagedReference to manage circular reference
-    private List<Policy> policies = new ArrayList<>();
-
-    public void addPolicy(Policy policy) {
-        policies.add(policy);
-        policy.setVehicle(this);
-    }
-
-    public void removePolicy(Policy policy) {
-        policies.remove(policy);
-        policy.setVehicle(null);
-    }
+//    @OneToMany (mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference // Use JsonManagedReference to manage circular reference
+//    private List<Policy> policies = new ArrayList<>();
+//
+//    public void addPolicy(Policy policy) {
+//        policies.add(policy);
+//        policy.setVehicle(this);
+//    }
+//
+//    public void removePolicy(Policy policy) {
+//        policies.remove(policy);
+//        policy.setVehicle(null);
+//    }
 }

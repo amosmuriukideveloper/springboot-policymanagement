@@ -1,7 +1,6 @@
 package com.microS.policymanagement.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,12 +50,10 @@ public class Policy {
     private List<CoverageOptions> coverageOptions;
 
 
+    // Retrieve Vehicle entity from persistence context
 
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JsonBackReference // Use JsonBackReference to avoid circular reference
-
-    @JoinColumn(name = "vehicle_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "vehicle")
     private Vehicle vehicle;
 
 
@@ -64,17 +61,7 @@ public class Policy {
     public boolean isIncludeCourtesyCar() {
         return true;
     }
-    public void addPolicy(Vehicle vehicle) {
-        this.vehicle = vehicle;
-        vehicle.getPolicies().add(this);
-    }
 
-    public void removePolicy() {
-        if (vehicle != null) {
-            vehicle.getPolicies().remove(this);
-            vehicle = null;
-        }
-    }
 
     public boolean isExcessProtector() {
         return true;
@@ -89,16 +76,7 @@ public class Policy {
     }
 
 
-    // Helper method to set Vehicle entity and handle cascade
-    public void setVehicle(Vehicle vehicle) {
-        if (this.vehicle != null) {
-            this.vehicle.getPolicies().remove(this);
-        }
-        this.vehicle = vehicle;
-        if (vehicle != null) {
-            vehicle.getPolicies().add(this);
-        }
-    }
+
 
     // Helper method to generate policy number with custom format
     @PrePersist
@@ -106,6 +84,8 @@ public class Policy {
         // Implement your custom policy number generation logic here
         policyNumber = "POL-" + id ;
     }
+
+    private int premium;
 
 
 }
