@@ -12,9 +12,18 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UniversalResponse implements Serializable {
+public class UniversalResponse<V> implements Serializable {
     private int status;
     private String message;
     //TODO: implement how to display data to the client
     private String data;
+
+    public UniversalResponse() {
+
+    }
+
+
+    public boolean isPresent() {
+        return true;
+    }
 }

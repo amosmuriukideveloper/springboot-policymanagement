@@ -17,6 +17,6 @@ public class PolicyHolderDTO {
     private String lastName;
     private Date dob;
     private int nationalId;
-    private String emailAddress;
+    private String email;
     private String kra;
 }

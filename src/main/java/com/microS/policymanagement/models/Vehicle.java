@@ -1,5 +1,6 @@
 package com.microS.policymanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class Vehicle {
     private int manufactureYear;
 
     @OneToMany (mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Use JsonManagedReference to manage circular reference
     private List<Policy> policies = new ArrayList<>();
 
     public void addPolicy(Policy policy) {

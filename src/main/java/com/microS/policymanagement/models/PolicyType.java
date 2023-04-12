@@ -1,5 +1,7 @@
 package com.microS.policymanagement.models;
 
+
+
 public enum PolicyType {
     COMPREHENSIVE,
     THIRD_PARTY,

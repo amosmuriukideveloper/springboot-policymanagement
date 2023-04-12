@@ -1,30 +1,42 @@
 package com.microS.policymanagement.Controllers;
 
 
-import com.microS.policymanagement.Services.premiumcal;
-import com.microS.policymanagement.models.CoverageOptions;
-import com.microS.policymanagement.models.CoverageType;
-import com.microS.policymanagement.models.Policy;
+import com.microS.policymanagement.Services.PremiumCalculator;
+import com.microS.policymanagement.models.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/premium")
 public class premiumcalController {
 
-    private final premiumcal premiumCalculationService;
 
-    public premiumcalController(premiumcal premiumCalculationService) {
-        this.premiumCalculationService = premiumCalculationService;
+    private final PremiumCalculator premiumCalculator;
+
+    public premiumcalController(PremiumCalculator premiumCalculator) {
+        this.premiumCalculator = premiumCalculator;
     }
 
     @PostMapping("/cal")
-    public ResponseEntity<Double> calculatePremiumForPolicy(@RequestBody Policy policy, @RequestParam CoverageType coverageType) {
-        double premium = premiumCalculationService.calculatePremium(policy, CoverageType.valueOf(String.valueOf(coverageType)), policy.getVehicle());
+    public ResponseEntity<Double> calculatePremiumForPolicy(@RequestBody Policy policy) {
+        Vehicle vehicle = policy.getVehicle();
+        Integer manufactureYear = vehicle.getManufactureYear();
+        String makeModel = vehicle.getMake() + " " + vehicle.getModel(); // Concatenate make and model
+        PolicyType policyType = policy.getPolicyType();
+        CoverageType coverageType = policy.getCoverageType();
+        List<CoverageOptions> coverageOptions = policy.getCoverageOptions(); // Change to List
+        if (manufactureYear == null || makeModel == null || policyType == null || coverageOptions == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Set<CoverageOptions> coverageOptionsSet = new HashSet<>(coverageOptions); // Convert to Set
+        double premium = premiumCalculator.calculatePremium(makeModel, manufactureYear, policy, coverageType, policyType, coverageOptionsSet); // Use Set
         return ResponseEntity.ok(premium);
     }
 

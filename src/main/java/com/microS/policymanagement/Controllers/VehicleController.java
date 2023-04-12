@@ -1,6 +1,7 @@
 package com.microS.policymanagement.Controllers;
 
 
+import com.microS.policymanagement.DTO.UniversalResponse;
 import com.microS.policymanagement.DTO.VehicleDTO;
 import com.microS.policymanagement.Services.VehicleService;
 import com.microS.policymanagement.models.Vehicle;
@@ -21,42 +22,26 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
-        List<Vehicle> vehicles = vehicleService.getAllVehicles();
-        List<VehicleDTO> vehicleDTOs = vehicles.stream()
-                .map(vehicle -> {
-                    VehicleDTO vehicleDTO = new VehicleDTO();
-                    BeanUtils.copyProperties(vehicle, vehicleDTO);
-                    return vehicleDTO;
-                })
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(vehicleDTOs);
+    public ResponseEntity<UniversalResponse<List<VehicleDTO>>> getAllVehicles() {
+        UniversalResponse<List<VehicleDTO>> response = vehicleService.getAllVehicles();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable("id") Long id) {
-        Optional<Vehicle> optionalVehicle = vehicleService.getVehicleById(id);
-        if (optionalVehicle.isPresent()) {
-            VehicleDTO vehicleDTO = new VehicleDTO();
-            BeanUtils.copyProperties(optionalVehicle.get(), vehicleDTO);
-            return ResponseEntity.ok(vehicleDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<UniversalResponse<VehicleDTO>> getVehicleById(@PathVariable("id") Long id) {
+        UniversalResponse<VehicleDTO> response = vehicleService.getVehicleById(id);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<VehicleDTO> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
-        Vehicle vehicle = new Vehicle();
-        BeanUtils.copyProperties(vehicleDTO, vehicle);
-        vehicleService.saveVehicle(vehicle);
-        return new ResponseEntity<>(vehicleDTO, HttpStatus.CREATED);
+    public ResponseEntity<UniversalResponse<Void>> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
+        UniversalResponse<Void> response = vehicleService.saveVehicle(vehicleDTO);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteVehicle(@PathVariable("id") Long id) {
-        vehicleService.deleteVehicle(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<UniversalResponse<Void>> deleteVehicle(@PathVariable("id") Long id) {
+        UniversalResponse<Void> response = vehicleService.deleteVehicle(id);
+        return ResponseEntity.ok(response);
     }
-
 }
